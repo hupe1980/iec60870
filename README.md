@@ -63,12 +63,6 @@ Run `just` to list recipes. Use `just check` for formatting, Clippy and tests, `
 
 The [conformance report](https://hupe1980.github.io/iec60870/docs/conformance/) maps protocol procedures to tests, independent peers and remaining gaps. Run `just interop` with Docker and tshark 4.6 or newer for peer and dissector checks. After an intentional behavior change, run `just refresh-conformance` and review the generated changes.
 
-### Publishing a release
-
-Run the **Release** workflow manually for a rehearsal. It builds the crate and CLI archives, runs CI, and installs and tests the generated Homebrew formula. On a tag matching the manifest version (for example, `v0.2.0`), the workflow stages and verifies the GitHub Release assets in a draft, publishes the crate to crates.io, then makes the draft public. If publication is interrupted, rerun the failed jobs for the same tag. Stable tags also update `hupe1980/tap/iec60870` for Apple Silicon and Linux (x86-64 and ARM64).
-
-Configure the crate’s trusted publisher as `hupe1980/iec60870`, workflow `release.yml`, environment `crates-io`. Store `HOMEBREW_APP_ID` and `HOMEBREW_APP_PRIVATE_KEY` in the repository’s `homebrew` environment. The GitHub App needs contents write access to `hupe1980/homebrew-tap`.
-
 ## License
 
 Available under the [MIT](LICENSE-MIT) or [Apache-2.0](LICENSE-APACHE) license, at your option.
