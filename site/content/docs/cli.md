@@ -4,12 +4,19 @@ description = "Decode frames, inspect captures and query a simulated or live IEC
 weight = 2
 +++
 
-Stable CLI releases include TLS and serial support. Install the release on Apple Silicon or 64-bit Linux (x86-64 or ARM64) with `brew install hupe1980/tap/iec60870`. For a Cargo installation from crates.io, use `cargo install --locked iec60870 --features cli,tls,serial`.
+## Install the CLI
 
-To try the decoder from a source checkout, install the optional CLI and decode a 104 control frame.
+For Apple Silicon Macs and Linux (x86-64 or ARM64), install the prebuilt CLI with Homebrew:
 
 ```sh
-cargo install --locked --path . --features cli
+brew install hupe1980/tap/iec60870
+```
+
+The formula includes TLS and serial monitoring. To build the same CLI from crates.io, run `cargo install --locked iec60870 --features cli,tls,serial`.
+
+## Decode a frame
+
+```sh
 iec60870 decode 68:04:07:00:00:00
 ```
 
@@ -200,10 +207,9 @@ A refused selection exits 3. Oversized, malformed or aborted transfers and local
 
 ## Read a station over mutual TLS
 
-Build with both features, then supply your trust anchors, client certificate chain and private key as three separate PEM **paths**:
+Supply the paths to your trust anchors, client certificate chain and private key.
 
 ```sh
-cargo install --locked --path . --features cli,tls
 iec60870 --json client rtu.example --tls ca.pem operator.pem operator.key read 200
 ```
 
@@ -240,7 +246,7 @@ Dumpcap reports capture statistics and any available kernel drop counts on stder
 
 ## Monitor a serial tap
 
-Install with `cargo install --locked --path . --features cli,serial`. Connect a receive-only tap to a line already carrying IEC 101 traffic. The monitor emits observed frames as they arrive. It uses eight data bits, one stop bit, even parity and 9600 baud by default.
+Connect a receive-only tap to a line already carrying IEC 101 traffic. The monitor emits observed frames as they arrive. It uses eight data bits, one stop bit, even parity and 9600 baud by default.
 
 ```sh
 iec60870 --json serial-monitor /dev/ttyUSB0 --baud 19200 --parity even --link-addr 2

@@ -6,6 +6,8 @@ weight = 1
 
 A controlling station (client) asks an outstation (server) for its current points. IEC 104 carries these messages over TCP. Each application service data unit (ASDU) identifies the station, the type of data and why it was sent.
 
+To inspect a frame or run the simulator with Homebrew, follow the [CLI installation guide](@/docs/cli.md#install-the-cli).
+
 ## Run a loopback interrogation
 
 From a source checkout with Rust 1.88 or newer, run the codec example and then the station example.

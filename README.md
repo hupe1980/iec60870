@@ -4,6 +4,17 @@ IEC 60870-5-101 and -104 telecontrol for Rust. Build a controlling station that 
 
 [Getting started](https://hupe1980.github.io/iec60870/docs/getting-started/) · [CLI guide](https://hupe1980.github.io/iec60870/docs/cli/) · [Interoperability statement](https://hupe1980.github.io/iec60870/docs/pics/)
 
+## Install the CLI with Homebrew
+
+On Apple Silicon Macs and Linux (x86-64 or ARM64), install the CLI and decode your first IEC 104 frame:
+
+```sh
+brew install hupe1980/tap/iec60870
+iec60870 decode 680407000000
+```
+
+The decoder prints `STARTDT act`, a request to start data transfer. The Homebrew package includes TLS and serial support.
+
 ## Run a station
 
 From a source checkout with Rust 1.88 or newer, run a client and outstation together on loopback.
@@ -32,15 +43,13 @@ println!("{decoded}"); // M_ME_TF_1 (36) spontaneous (3), CA 1, 1 object, IOA 40
 
 The codec preserves received values, including out-of-range time fields. Decode errors identify the field and octet offset. Encoding uses the caller’s buffer and checks the selected profile.
 
-## Inspect a frame or query the simulator
+## Query the simulator
 
 ```sh
-cargo install --locked --path . --features cli
-iec60870 decode 680407000000
 iec60870 sim --demo
 ```
 
-The six-byte frame decodes to `STARTDT act`, a request to start IEC 104 data transfer. With the simulator running, open another terminal and run `iec60870 client 127.0.0.1:2404 read 110`. The demo’s initial reading is `step 5`. The [CLI guide](https://hupe1980.github.io/iec60870/docs/cli/) covers packet captures, JSON output, station files and serial monitoring.
+With the simulator running, open another terminal and run `iec60870 client 127.0.0.1:2404 read 110`. The demo’s initial reading is `step 5`. The [CLI guide](https://hupe1980.github.io/iec60870/docs/cli/) covers packet captures, JSON output, station files and serial monitoring.
 
 ## Choose Cargo features
 
