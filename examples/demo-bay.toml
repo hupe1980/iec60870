@@ -1,0 +1,117 @@
+# Demo station, with phase voltages in kV and currents in A.
+[[station]]
+ca = 1
+
+[[station.point]]
+ioa = 100
+kind = "double"
+value = "on"
+
+[[station.point]]
+ioa = 101
+kind = "double"
+value = "on"
+
+[[station.point]]
+ioa = 102
+kind = "single"
+value = false
+
+[[station.point]]
+ioa = 103
+kind = "single"
+value = true
+
+[[station.point]]
+ioa = 110
+kind = "step"
+value = 5
+
+[[station.point]]
+ioa = 4001
+kind = "float"
+value = 20.0
+walk = { step = 0.05, min = 19.6, max = 20.4, every = "1s" }
+
+[[station.point]]
+ioa = 4002
+kind = "float"
+value = 20.0
+walk = { step = 0.05, min = 19.6, max = 20.4, every = "1s" }
+
+[[station.point]]
+ioa = 4003
+kind = "float"
+value = 20.0
+walk = { step = 0.05, min = 19.6, max = 20.4, every = "1s" }
+
+[[station.point]]
+ioa = 4011
+kind = "float"
+value = 412.0
+walk = { step = 3, min = 380, max = 450, every = "1s" }
+
+[[station.point]]
+ioa = 4012
+kind = "float"
+value = 412.0
+walk = { step = 3, min = 380, max = 450, every = "1s" }
+
+[[station.point]]
+ioa = 4013
+kind = "float"
+value = 412.0
+walk = { step = 3, min = 380, max = 450, every = "1s" }
+
+[[station.point]]
+ioa = 4020
+kind = "float"
+value = 280.0
+walk = { step = 5, min = 200, max = 350, every = "2s" }
+
+[[station.point]]
+ioa = 4021
+kind = "float"
+value = 50.0
+walk = { step = 0.01, min = 49.95, max = 50.05, every = "1s" }
+
+[[station.point]]
+ioa = 4030
+kind = "scaled"
+value = 65
+walk = { step = 1, min = 40, max = 90, every = "5s" }
+
+[[station.point]]
+ioa = 4100
+kind = "counter"
+value = 1000000
+
+[[station.command]]
+ioa = 5000
+kind = "double"
+mode = "sbo"
+status = 100
+
+[[station.command]]
+ioa = 5001
+kind = "double"
+mode = "sbo"
+status = 101
+
+[[station.command]]
+ioa = 5002
+kind = "step"
+mode = "both"
+status = 110
+step_range = [1, 19]
+
+[[station.command]]
+ioa = 5003
+kind = "single"
+mode = "sbo"
+accept = false
+
+[[station.command]]
+ioa = 6000
+kind = "setpoint"
+mode = "direct"

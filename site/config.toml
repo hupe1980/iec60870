@@ -1,0 +1,35 @@
+base_url = "https://hupe1980.github.io/iec60870"
+title = "iec60870"
+description = "IEC 60870-5-104 and -101 in Rust: a panic-free ASDU codec, sans-IO 104 and 101 links, controlling and controlled stations with select-before-operate, and mutual TLS. Checked against Wireshark and lib60870-C. no_std-capable, MIT or Apache-2.0."
+default_language = "en"
+author = "Frank Hübner"
+
+compile_sass = false
+minify_html = true
+build_search_index = true
+generate_feeds = true
+feed_filenames = ["atom.xml"]
+
+taxonomies = []
+
+[markdown]
+smart_punctuation = false
+bottom_footnotes = true
+insert_anchor_links = "right"
+
+[markdown.highlighting]
+style = "class"
+light_theme = "ayu-light"
+dark_theme = "ayu-dark"
+add_color_scheme = true
+
+[search]
+index_format = "elasticlunr_json"
+
+[extra]
+repository = "https://github.com/hupe1980/iec60870"
+license = "MIT OR Apache-2.0"
+
+[[extra.nav]]
+name = "Docs"
+path = "docs/"

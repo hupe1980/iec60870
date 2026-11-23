@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img"
+     aria-label="iec60870 — IEC 60870-5-101 and -104 telecontrol in Rust">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#061a18"/>
+      <stop offset="1" stop-color="#0c2b33"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <!-- A telecontrol mast talking to an outstation: the control centre and the RTU. -->
+  <g fill="none" stroke="#4fd8c4" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" opacity="0.92">
+    <path d="M250 180 200 370M250 180l50 190M214 315h72"/>
+    <circle cx="250" cy="150" r="14"/>
+    <path d="M205 112a62 62 0 0 0 0 76M295 112a62 62 0 0 1 0 76M175 85a104 104 0 0 0 0 130M325 85a104 104 0 0 1 0 130"/>
+  </g>
+  <!-- APDU octets on the wire: start, length, control field, ASDU. -->
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="26" fill="#9fe7dc" opacity="0.8">
+    <text x="120" y="430">68 0E 00 00 00 00 64 01 06 00 01 00 00 00 00 14</text>
+  </g>
+  <text x="120" y="520" font-family="ui-monospace, SFMono-Regular, Menlo, monospace"
+        font-size="62" fill="#e8f6f3" font-weight="700">iec60870</text>
+  <text x="120" y="572" font-family="system-ui, -apple-system, Segoe UI, sans-serif"
+        font-size="30" fill="#9fc7c0">IEC 60870-5-101 &amp; -104 telecontrol for Rust</text>
+  <text x="640" y="150" font-family="system-ui, -apple-system, Segoe UI, sans-serif"
+        font-size="26" fill="#4fd8c4" letter-spacing="2">CONTROLLING · CONTROLLED STATION</text>
+  <g font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="30" fill="#c8e4df">
+    <text x="640" y="230">Panic-free ASDU codec</text>
+    <text x="640" y="290">Sans-IO 104 and 101 links</text>
+    <text x="640" y="350">Select-before-operate enforced</text>
+    <text x="640" y="410">Checked against Wireshark</text>
+    <text x="640" y="470">no_std capable</text>
+  </g>
+</svg>

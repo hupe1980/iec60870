@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="wrap handbook">
+  <span class="eyebrow">404</span>
+  <h1 style="font-size: 2rem; letter-spacing: -.03em; margin: 0 0 .75rem;">Page not found</h1>
+  <p class="muted">Browse the guides or search for a command, protocol or station feature.</p>
+  <div class="cta" style="margin-top: 1.5rem;">
+    <a class="btn btn-primary" href="{{ get_url(path='@/docs/_index.md') | safe }}">Documentation</a>
+    <a class="btn btn-ghost" href="{{ get_url(path='@/_index.md') | safe }}">Home</a>
+  </div>
+</div>
+{% endblock %}

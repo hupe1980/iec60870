@@ -22,3 +22,31 @@ rustc-ice-*.txt
 #  and can be added to the global gitignore or merged into this file.  For a more nuclear
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
+
+# Internal architecture notes (see concepts/README.md), anchored to the repository root.
+# ROADMAP.md is the spec of specs: every open item names its feature specification.
+# `tests/concepts.rs` guards them and skips when the directory is absent, which is what CI sees.
+#
+# The third-party corpus — IEC public previews, Wireshark's IEC 60870-5 dissector (GPL-2),
+# lib60870's source (GPL-3), sample captures — lives at `concepts/reference/` and is covered
+# by this line: fetched by scripts/fetch-references.sh, indexed in `concepts/REFERENCES.md`,
+# and never redistributed from here.
+/concepts/
+
+# This project's own feature specifications, and the Spec Kit machinery that produces them:
+# one `specs/NNN-slug/` per ROADMAP item, `.specify/memory/constitution.md`, and the
+# `/speckit-*` skills. Same rule as `concepts/` — internal, and the published tree may not
+# cite a path its reader does not have; `cargo test --test concepts` fails on one that does.
+# Matching speccoder, eebus, mrun, agentplane and iec61850-rs.
+/specs/
+/.specify/
+/.claude/
+/.agents/skills/speckit-*/
+.DS_Store
+
+# Fuzzing corpora and working artifacts. `fuzz/regressions/` is deliberately *not* ignored:
+# an input a fuzzer crashed on is renamed after the bug, committed, and replayed forever.
+/fuzz/target/
+/fuzz/corpus/
+/fuzz/artifacts/
+/site/public/

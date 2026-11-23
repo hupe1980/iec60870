@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <p class="eyebrow">IEC 60870-5-101 / 104</p>
+      <h1>Telecontrol<br>in Rust.</h1>
+      <p class="lede">Build a client or an outstation for IEC 104 over TCP and IEC 101 over serial. Use the same protocol core on an embedded board or in a Tokio service.</p>
+      <div class="cta">
+        <a class="btn btn-primary" href="{{ get_url(path='@/docs/getting-started.md') | safe }}">Run your first station <span aria-hidden="true">→</span></a>
+        <a class="btn btn-ghost" href="{{ config.extra.repository }}">View source</a>
+      </div>
+    </div>
+    <figure class="frame">
+      <figcaption>IEC 104 <span>/</span> Frame anatomy</figcaption>
+      <div class="octets" aria-label="Hexadecimal frame"><b>68</b><b>04</b><b>07</b><b>00</b><b>00</b><b>00</b></div>
+      <dl>
+        <div><dt>68</dt><dd>Start octet</dd></div>
+        <div><dt>04</dt><dd>Four octets follow</dd></div>
+        <div><dt>07 00 00 00</dt><dd>Request to start data transfer</dd></div>
+      </dl>
+      <a href="{{ get_url(path='@/docs/cli.md') | safe }}">Decode this frame with the CLI <span aria-hidden="true">↗</span></a>
+    </figure>
+  </div>
+</section>
+<section class="wrap handbook">
+  <div class="section-title"><h2>Developer guides</h2><a href="{{ get_url(path='@/docs/_index.md') | safe }}">All documentation →</a></div>
+  <div class="guides">
+    {% for path in ["docs/getting-started.md", "docs/cli.md", "docs/conformance.md"] %}
+      {% set guide = get_page(path=path) %}{% include "guide.html" %}
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

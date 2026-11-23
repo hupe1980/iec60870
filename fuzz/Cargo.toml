@@ -1,0 +1,79 @@
+[package]
+name = "iec60870-fuzz"
+version = "0.0.0"
+publish = false
+edition = "2024"
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4"
+iec60870 = { path = "..", default-features = false, features = ["cs104", "cs101", "file-transfer"] }
+
+# Not a member of the crate's workspace.
+[workspace]
+members = ["."]
+
+[[bin]]
+name = "asdu_cs104"
+path = "fuzz_targets/asdu_cs104.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "asdu_cs101"
+path = "fuzz_targets/asdu_cs101.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "asdu_any"
+path = "fuzz_targets/asdu_any.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "apci"
+path = "fuzz_targets/apci.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "cs104_link"
+path = "fuzz_targets/cs104_link.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "ft12"
+path = "fuzz_targets/ft12.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "cs101_link"
+path = "fuzz_targets/cs101_link.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "controlled_station"
+path = "fuzz_targets/controlled_station.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "file_transfer"
+path = "fuzz_targets/file_transfer.rs"
+test = false
+doc = false
+bench = false

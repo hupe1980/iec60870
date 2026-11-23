@@ -1,0 +1,11 @@
+{% set report = load_data(path="static/conformance.md") %}
+<div id="coverage-controls" hidden>
+  <label for="coverage-query">Find a case, role or test</label>
+  <input type="search" id="coverage-query" placeholder="e.g. STARTDT" aria-controls="coverage-table">
+  <label><input type="checkbox" id="coverage-gaps" aria-controls="coverage-table"> Show gaps only</label>
+  <output id="coverage-count" aria-live="polite"></output>
+</div>
+<div id="coverage-table" class="table-scroll coverage" role="region" aria-label="Conformance evidence by procedure" tabindex="0">
+{{ report | replace(from="# Conformance coverage", to="") | markdown | safe }}
+</div>
+<script src="{{ get_url(path='js/conformance.js', cachebust=true) | safe }}" defer></script>

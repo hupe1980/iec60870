@@ -1,0 +1,2 @@
+# The standard's names for its time formats are identifiers, not prose.
+doc-valid-idents = ["CP56Time2a", "CP24Time2a", "CP16Time2a", ".."]

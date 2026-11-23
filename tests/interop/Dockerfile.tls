@@ -1,0 +1,27 @@
+FROM debian:bookworm-slim
+
+# The commit is pinned in one place, tests/interop/LIB60870_COMMIT, and passed by the test
+# harness as a build argument; there is deliberately no default here.
+ARG LIB60870_COMMIT
+
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends build-essential git curl bzip2 ca-certificates \
+ && rm -rf /var/lib/apt/lists/*
+
+RUN test -n "$LIB60870_COMMIT" \
+ && git clone https://github.com/mz-automation/lib60870.git /opt/lib60870 \
+ && cd /opt/lib60870 \
+ && git checkout --detach "$LIB60870_COMMIT" \
+ && test "$(git rev-parse HEAD)" = "$LIB60870_COMMIT" \
+ && cd lib60870-C/dependencies \
+ && curl -fsSL -o mbedtls.tar.bz2 https://github.com/Mbed-TLS/mbedtls/releases/download/mbedtls-3.6.6/mbedtls-3.6.6.tar.bz2 \
+ && echo "8fb65fae8dcae5840f793c0a334860a411f884cc537ea290ce1c52bb64ca007a  mbedtls.tar.bz2" | sha256sum -c - \
+ && tar xjf mbedtls.tar.bz2 \
+ && make -C .. WITH_MBEDTLS3=1 MBEDTLS_DIR=dependencies/mbedtls-3.6.6 -j"$(nproc)"
+
+COPY tls_peer.h station_client.c station_server.c /opt/peer/
+RUN cd /opt/lib60870/lib60870-C \
+ && for p in station_client station_server; do \
+      gcc -DINTEROP_TLS -DCONFIG_CS104_SUPPORT_TLS=1 -O1 -g -Wall -o /usr/local/bin/$(echo $p | tr _ -) /opt/peer/$p.c \
+        -Isrc/inc/api -Isrc/hal/inc -Isrc/tls build/liblib60870.a -lpthread || exit 1; \
+    done

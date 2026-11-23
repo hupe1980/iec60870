@@ -1,0 +1,44 @@
+# cargo deny: what may enter the dependency tree.
+#
+# The crate is MIT OR Apache-2.0. No GPL code may be linked into it or its tests: the GPL
+# peers the interop suite runs against (lib60870-C, Wireshark) are separate processes built
+# in containers, never dependencies. `cargo deny check` runs in CI over every feature.
+
+[graph]
+all-features = true
+
+[licenses]
+# Permissive licences only. A crate offered under "X OR GPL" passes on X; a crate that is
+# GPL- or LGPL-only fails, because nothing in this list allows it.
+allow = [
+    "MIT",
+    "Apache-2.0",
+    "Apache-2.0 WITH LLVM-exception",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "ISC",
+    "Unicode-3.0",
+    "Unlicense",
+    "Zlib",
+]
+confidence-threshold = 0.9
+# MPL-2.0 is file-level copyleft: using `serialport` unmodified places no obligation on this
+# crate's own files. It is allowed for that crate alone, not in general.
+exceptions = [
+    { allow = ["MPL-2.0"], crate = "serialport" },
+]
+
+[advisories]
+# Unmaintained crates are reported for direct dependencies only; a vulnerability anywhere fails.
+unmaintained = "workspace"
+yanked = "deny"
+
+[bans]
+multiple-versions = "warn"
+wildcards = "deny"
+allow-wildcard-paths = true
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"
+allow-registry = ["https://github.com/rust-lang/crates.io-index"]

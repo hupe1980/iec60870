@@ -1,0 +1,11 @@
+[package]
+name = "iec60870-embedded-example"
+version = "0.0.0"
+publish = false
+edition = "2024"
+rust-version = "1.88"
+
+[dependencies]
+iec60870 = { path = "../..", default-features = false, features = ["cs104"] }
+
+[workspace]

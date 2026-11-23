@@ -1,0 +1,308 @@
+[package]
+name = "iec60870"
+version = "0.2.0"
+edition = "2024"
+rust-version = "1.88"
+authors = ["hupe1980"]
+license = "MIT OR Apache-2.0"
+description = "IEC 60870-5-101/104 in Rust: the ASDU codec, the 104 APCI link and the 101 FT 1.2 link, controlling and controlled stations, TLS. Panic-free, sans-IO, no_std-capable."
+repository = "https://github.com/hupe1980/iec60870"
+homepage = "https://hupe1980.github.io/iec60870"
+documentation = "https://docs.rs/iec60870"
+readme = "README.md"
+keywords = ["iec60870", "iec104", "scada", "telecontrol", "rtu"]
+categories = ["network-programming", "embedded", "no-std", "parser-implementations"]
+# Keep the release independent of ignored files and nested reference checkouts.
+include = [
+    "/src/**/*.rs", "/examples/demo-bay.toml", "/src/tls/deviations.md", "/examples/*.rs", "/tests/**/*.rs",
+    "/tests/interop/**/*.c", "/tests/interop/**/*.h", "/tests/interop/**/Dockerfile*",
+    "/tests/interop/LIB60870_COMMIT", "/tests/interop/cs101/run.sh",
+    "/README.md", "/CHANGELOG.md", "/LICENSE-*", "/Cargo.lock", "/clippy.toml", "/rustfmt.toml",
+]
+
+[[bin]]
+name = "iec60870"
+path = "src/bin/iec60870/main.rs"
+required-features = ["cli"]
+
+[[test]]
+name = "cli"
+path = "tests/cli.rs"
+required-features = ["cli"]
+
+[lib]
+name = "iec60870"
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
+[features]
+default = ["std", "cs104"]
+cli = ["std", "cs101", "cs104", "file-transfer", "dep:tempfile", "dep:clap", "dep:serde_json", "dep:serde", "dep:toml"]
+# The crate is `no_std` + `alloc` everywhere; `alloc` is not optional. `std` adds
+# `std::error::Error`, the system clock, and the blocking socket adapters.
+std = []
+# IEC 60870-5-104: the APCI codec and the sans-IO `Cs104Link` (no_std + alloc).
+cs104 = []
+# IEC 60870-5-101: FT 1.2 frames and the sans-IO balanced and unbalanced links (no_std + alloc).
+cs101 = []
+# Station directory listing and local catalogs of file records.
+file-transfer = []
+file-store-fs = ["file-transfer", "std", "dep:cap-std", "dep:cap-fs-ext"]
+# Async runner (`driver::TokioDriver`) and `cs104::connect_async` / `accept_async` over Tokio.
+tokio = ["std", "dep:tokio"]
+# Blocking serial adapter for the 101 link (`cs101::open_serial`) over the `serialport` crate.
+serial = ["std", "cs101", "dep:serialport"]
+# IEC 62351-3 TLS for 104 (`tls` module, `cs104::connect_tls` / `accept_tls`) over rustls with
+# the `ring` provider; no OpenSSL. With `tokio` as well, the async twins. Cargo has no "both
+# features" switch, so `tokio-rustls` comes with `tls`; it pulls only Tokio's I/O traits.
+tls = ["std", "cs104", "dep:rustls", "dep:tokio-rustls"]
+
+[dependencies]
+tempfile = { version = "3", optional = true }
+serde = { version = "1", optional = true, features = ["derive"] }
+toml = { version = "1", optional = true, default-features = false, features = ["std", "parse", "serde"] }
+clap = { version = "4.5", optional = true, default-features = false, features = ["std", "derive", "help", "usage", "error-context", "suggestions"] }
+serde_json = { version = "1", optional = true }
+cap-std = { version = "4", optional = true }
+cap-fs-ext = { version = "4", optional = true }
+tokio = { version = "1.38", optional = true, default-features = false, features = ["net", "time", "io-util", "macros", "rt", "sync"] }
+serialport = { version = "4.10", optional = true, default-features = false }
+rustls = { version = "0.23.31", optional = true, default-features = false, features = ["std", "tls12", "ring"] }
+tokio-rustls = { version = "0.26.2", optional = true, default-features = false, features = ["tls12", "ring"] }
+
+[dev-dependencies]
+tempfile = "3"
+tokio = { version = "1.38", default-features = false, features = ["rt", "rt-multi-thread", "macros", "net", "time", "io-util", "test-util", "sync"] }
+proptest = "1"
+serde_json = "1"
+rcgen = { version = "0.14", default-features = false, features = ["ring", "pem"] }
+
+[lints.rust]
+# The library carries `#![forbid(unsafe_code)]` in `src/lib.rs`, which is the actual
+# guarantee. This is `deny` rather than `forbid` so a test target could opt in visibly.
+unsafe_code = "deny"
+missing_docs = "warn"
+unused_qualifications = "warn"
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(docsrs)'] }
+
+[lints.clippy]
+unwrap_used = "deny"
+expect_used = "deny"
+panic = "deny"
+indexing_slicing = "deny"
+pedantic = { level = "warn", priority = -1 }
+module_name_repetitions = "allow"
+must_use_candidate = "allow"
+missing_errors_doc = "allow"
+missing_panics_doc = "allow"
+cast_possible_truncation = "allow"
+cast_sign_loss = "allow"
+cast_possible_wrap = "allow"
+struct_excessive_bools = "allow"
+similar_names = "allow"
+
+# Every test target states the features it needs, so `cargo test --no-default-features`
+# builds only the ones that can build.
+[[test]]
+name = "concepts"
+path = "tests/concepts.rs"
+
+[[test]]
+name = "asdu_roundtrip"
+path = "tests/asdu_roundtrip.rs"
+
+[[test]]
+name = "asdu_edges"
+path = "tests/asdu_edges.rs"
+
+[[test]]
+name = "regressions"
+path = "tests/regressions.rs"
+
+[[test]]
+name = "reference_capture"
+path = "tests/reference_capture.rs"
+
+# The 104 oracle frames ASDUs in APCI I-frames, so it belongs to the 104 build.
+[[test]]
+name = "tshark_oracle"
+path = "tests/tshark_oracle.rs"
+required-features = ["cs104"]
+
+[[example]]
+name = "asdu"
+path = "examples/asdu.rs"
+required-features = ["std"]
+
+[[test]]
+name = "cs104_link"
+path = "tests/cs104_link.rs"
+required-features = ["cs104"]
+
+[[test]]
+name = "cs104_adapters"
+path = "tests/cs104_adapters.rs"
+required-features = ["cs104", "std", "tokio"]
+
+[[test]]
+name = "simulation"
+path = "tests/simulation.rs"
+required-features = ["cs104"]
+
+[[test]]
+name = "tshark_apci"
+path = "tests/tshark_apci.rs"
+required-features = ["cs104"]
+
+[[test]]
+name = "regressions_cs104"
+path = "tests/regressions_cs104.rs"
+required-features = ["cs104"]
+
+[[test]]
+name = "interop"
+path = "tests/interop.rs"
+required-features = ["cs104", "std"]
+
+[[example]]
+name = "cs104_link"
+path = "examples/cs104_link.rs"
+required-features = ["cs104", "std"]
+
+[[test]]
+name = "cs101_link"
+path = "tests/cs101_link.rs"
+required-features = ["cs101"]
+
+[[test]]
+name = "cs101_simulation"
+path = "tests/cs101_simulation.rs"
+required-features = ["cs101"]
+
+[[test]]
+name = "cs101_adapters"
+path = "tests/cs101_adapters.rs"
+required-features = ["cs101", "std"]
+
+[[test]]
+name = "tshark_ft12"
+path = "tests/tshark_ft12.rs"
+required-features = ["cs101"]
+
+[[test]]
+name = "regressions_cs101"
+path = "tests/regressions_cs101.rs"
+required-features = ["cs101"]
+
+[[test]]
+name = "interop_cs101"
+path = "tests/interop_cs101.rs"
+required-features = ["cs101", "std"]
+
+[[example]]
+name = "cs101_link"
+path = "examples/cs101_link.rs"
+required-features = ["cs101"]
+
+[[example]]
+name = "files"
+path = "examples/files.rs"
+required-features = ["cs104", "std", "file-transfer"]
+
+[[example]]
+name = "client"
+path = "examples/client.rs"
+required-features = ["cs104", "std"]
+
+[[example]]
+name = "server"
+path = "examples/server.rs"
+required-features = ["cs104", "std"]
+
+[[example]]
+name = "sbo"
+path = "examples/sbo.rs"
+required-features = ["cs104", "std"]
+
+[[test]]
+name = "station_controlled"
+path = "tests/station_controlled.rs"
+required-features = ["cs104"]
+
+[[test]]
+name = "station_controlling"
+path = "tests/station_controlling.rs"
+required-features = ["cs104"]
+
+[[test]]
+name = "station_adapters"
+path = "tests/station_adapters.rs"
+required-features = ["cs104", "std", "tokio"]
+
+[[test]]
+name = "station_simulation"
+path = "tests/station_simulation.rs"
+required-features = ["cs104"]
+
+[[test]]
+name = "tshark_station"
+path = "tests/tshark_station.rs"
+required-features = ["cs104"]
+
+[[test]]
+name = "regressions_station"
+path = "tests/regressions_station.rs"
+required-features = ["cs104"]
+
+[[test]]
+name = "interop_station"
+path = "tests/interop_station.rs"
+required-features = ["cs104", "std"]
+
+[[test]]
+name = "cs101_station"
+path = "tests/cs101_station.rs"
+required-features = ["cs101"]
+
+[[test]]
+name = "tls"
+path = "tests/tls.rs"
+required-features = ["cs104", "tls", "tokio"]
+
+[[test]]
+name = "interop_tls"
+path = "tests/interop_tls.rs"
+required-features = ["cs104", "tls"]
+
+[[example]]
+name = "tls_client"
+path = "examples/tls_client.rs"
+required-features = ["cs104", "tls"]
+
+# The conformance case list: every case names the tests that cover it or the reason it is
+# uncovered; reads test sources only, so it needs no feature.
+[[test]]
+name = "conformance"
+path = "tests/conformance.rs"
+
+[[test]]
+name = "pics"
+path = "tests/pics.rs"
+required-features = ["cs101", "cs104", "tls", "file-transfer"]
+
+[[test]]
+name = "file_store"
+path = "tests/file_store.rs"
+required-features = ["file-transfer"]
+
+[[test]]
+name = "file_directory"
+path = "tests/file_directory.rs"
+required-features = ["file-transfer", "cs104"]
+
+[[test]]
+name = "file_transfer"
+path = "tests/file_transfer.rs"
+required-features = ["std","cs104","file-transfer"]
